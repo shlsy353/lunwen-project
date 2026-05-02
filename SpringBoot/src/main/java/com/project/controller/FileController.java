@@ -82,22 +82,36 @@ public class FileController {
         File saveFile = new File(dirPath + fileName);
         file.transferTo(saveFile);
 
-        String url = "/head/" + fileName;
+        String url = "/api/file/head/" + fileName;
         return Result.success(url);
     }
 
     /**
      * 文件下载/查看接口
      *
-     * @param flag     文件名（精确匹配）
+     * @param flag     文件路径（支持子目录，如 head/xxx.jpg）
      * @param response HTTP 响应对象
      */
     @GetMapping("/{flag}")
     public void getFiles(@PathVariable String flag, HttpServletResponse response) {
         try {
-            List<String> fileNames = FileUtil.listFileNames(uploadDir);
+            // 先尝试按子目录路径查找
+            File targetFile = new File(uploadDir, flag);
+            if (targetFile.exists() && targetFile.isFile()) {
+                byte[] bytes = FileUtil.readBytes(targetFile);
+                String contentType = flag.endsWith(".jpg") || flag.endsWith(".jpeg") ? "image/jpeg"
+                        : flag.endsWith(".png") ? "image/png"
+                        : flag.endsWith(".gif") ? "image/gif"
+                        : "application/octet-stream";
+                response.setContentType(contentType);
+                OutputStream os = response.getOutputStream();
+                os.write(bytes);
+                os.flush();
+                return;
+            }
 
-            // 精确匹配文件名，避免 contains 模糊匹配导致的不确定性
+            // 降级：在根目录精确匹配文件名
+            List<String> fileNames = FileUtil.listFileNames(uploadDir);
             String fileName = fileNames.stream()
                     .filter(name -> name.equals(flag))
                     .findFirst()

@@ -182,6 +182,12 @@ const routes: Array<RouteRecordRaw> = [
                 meta: { title: '成绩申诉' }
             },
             {
+                path: 'leaders',
+                name: 'StudentLeaders',
+                component: () => import('@/views/student/LeaderManagement.vue'),
+                meta: { title: '我的领队' }
+            },
+            {
                 path: 'award-situation',
                 name: 'StudentAwardSituation',
                 component: () => import('@/views/student/AwardSituation.vue'),
