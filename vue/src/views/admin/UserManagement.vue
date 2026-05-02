@@ -137,6 +137,10 @@ const handleStatusChange = (row: User) => {
 
 const handleSubmit = async () => {
   try {
+    // 如果角色不是领队，重置领队状态，保持数据一致性
+    if (userForm.role !== 'LEADER') {
+      userForm.leaderStatus = 0
+    }
     if (userForm.id) {
       await request.put('/user', userForm)
       ElMessage.success('更新成功')

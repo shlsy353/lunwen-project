@@ -175,6 +175,10 @@ const handleEditTeacher = (row: any) => {
 }
 
 const saveTeacherEdit = async () => {
+    // 如果角色不是领队，重置领队状态，保持数据一致性
+    if (editForm.role !== 'LEADER') {
+        editForm.leaderStatus = 0
+    }
     if (editForm.id) {
         await request.put('/user', editForm)
         ElMessage.success('保存成功')

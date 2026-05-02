@@ -155,6 +155,11 @@ public class UserController {
                 user.setPassword(cn.hutool.crypto.SecureUtil.md5(user.getPassword()));
             }
         }
+        // 如果角色不是领队教师，重置领队状态，防止数据不一致
+        // 避免出现 role=TEACHER 但 leaderStatus=2 的脏数据
+        if (!"LEADER".equals(user.getRole())) {
+            user.setLeaderStatus(0);
+        }
         return userService.updateById(user) ? Result.success() : Result.error("更新失败");
     }
 

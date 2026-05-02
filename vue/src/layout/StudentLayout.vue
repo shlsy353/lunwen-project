@@ -24,6 +24,7 @@ const menuItems = [
   { path: '/student/dashboard', label: '首页' },
   { path: '/student/competition-types', label: '竞赛类型' },
   { path: '/student/competitions', label: '竞赛大厅' },
+  { path: '/student/leaders', label: '我的领队' },
   { path: '/student/registrations', label: '我的报名' },
   { path: '/student/award-situation', label: '获奖成就' },
   { path: '/student/scores', label: '竞赛评分' },

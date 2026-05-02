@@ -25,7 +25,7 @@ server:
   port: 2301
 
 file:
-  upload-dir: ./files/
+  upload-dir: E:/lunwen_project/First/sunhao/SpringBoot/files/
 
 # JWT Configuration
 jwt:
