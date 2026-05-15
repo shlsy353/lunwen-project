@@ -105,4 +105,27 @@ public class ExpenseController {
         expense.setStatus(status);
         return expenseService.updateById(expense) ? Result.success("处理完成") : Result.error("更新失败");
     }
+
+    /**
+     * 更新报销申请
+     *
+     * @param expense 报销实体数据
+     * @return 操作结果
+     */
+    @PutMapping
+    public Result<?> update(@RequestBody Expense expense) {
+        return expenseService.updateById(expense) ? Result.success("更新成功") : Result.error("更新失败");
+    }
+
+    /**
+     * 删除报销申请
+     *
+     * @param id 报销记录 ID
+     * @return 操作结果
+     */
+    @DeleteMapping("/{id}")
+    public Result<?> delete(@PathVariable Long id) {
+        return expenseService.removeById(id) ? Result.success("删除成功") : Result.error("删除失败");
+    }
+
 }

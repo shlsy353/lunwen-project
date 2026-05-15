@@ -60,9 +60,11 @@
                     </el-table-column>
                     <el-table-column prop="description" label="描述" min-width="200" show-overflow-tooltip />
                     <el-table-column prop="createTime" label="申请日期" width="180" />
-                    <el-table-column label="操作" width="130" align="center" fixed="right">
+                    <el-table-column label="操作" width="180" align="center" fixed="right">
                         <template #default="{ row }">
                             <template v-if="row.status === 0">
+                                <el-button link type="success" @click="handleApprove(row)">同意</el-button>
+                                <el-divider direction="vertical" />
                                 <el-button link type="primary" @click="handleEdit(row)">编辑</el-button>
                                 <el-divider direction="vertical" />
                                 <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
@@ -148,6 +150,14 @@ const handleAdd = () => {
 }
 
 const handleEdit = (row: any) => { Object.assign(form, row); dialogVisible.value = true }
+
+const handleApprove = (row: any) => {
+    ElMessageBox.confirm('确认同意该报销申请？', '提示', { type: 'warning' }).then(async () => {
+        await request.put(`/expense/${row.id}/status?status=1`)
+        ElMessage.success('已同意')
+        load()
+    }).catch(() => {})
+}
 
 const handleDelete = (row: any) => {
     ElMessageBox.confirm('确认删除该报销申请？', '警告', { type: 'warning' }).then(async () => {
