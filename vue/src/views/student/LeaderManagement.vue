@@ -19,7 +19,7 @@ const loadTeachers = async () => {
     loading.value = true
     try {
         const res = await request.get('/user/page', {
-            params: { pageNum: 1, pageSize: 100, role: 'TEACHER', username: searchTeacher.value }
+            params: { pageNum: 1, pageSize: 100, role: 'LEADER', username: searchTeacher.value }
         }) as any
         if (res.code === 200) {
             // Filter out existing leaders
