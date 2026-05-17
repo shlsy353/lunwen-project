@@ -39,7 +39,7 @@
                             @click="$router.push('/student/works')">提交作品</el-button>
                         <el-button link type="danger" v-if="item.status === 0"
                             @click="handleCancel(item)">取消报名</el-button>
-                        <el-button link type="info"
+                        <el-button link type="info" v-if="item.status !== 4"
                             @click="$router.push('/competition/' + item.competitionId)">竞赛详情</el-button>
                     </div>
                 </div>
@@ -65,8 +65,8 @@ const total = ref(0)
 const pageNum = ref(1)
 const pageSize = ref(10)
 
-const statusText = (s: number) => ['待审核', '已通过', '被驳回', '已晋级'][s] ?? '未知'
-const statusType = (s: number) => (['warning', 'success', 'danger', 'primary'] as const)[s] ?? 'info'
+const statusText = (s: number) => ['待审核', '已通过', '被驳回', '已晋级', '已撤销'][s] ?? '未知'
+const statusType = (s: number) => (['warning', 'success', 'danger', 'primary', 'info'] as const)[s] ?? 'info'
 
 const competitionMap = ref<Record<number, string>>({})
 
@@ -99,10 +99,10 @@ const load = async () => {
 
 const handleCancel = (row: any) => {
     ElMessageBox.confirm('确定取消该项目的报名申请？', '提示', { type: 'warning' }).then(async () => {
-        await request.delete('/registration/' + row.id)
+        await request.put('/registration', { ...row, status: 4 })
         ElMessage.success('已取消')
         load()
-    })
+    }).catch(() => {})
 }
 
 onMounted(load)

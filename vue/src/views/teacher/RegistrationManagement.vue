@@ -52,6 +52,7 @@
                                 <el-option label="已参赛" :value="1" />
                                 <el-option label="已拒绝" :value="2" />
                                 <el-option label="已晋级" :value="3" />
+                                <el-option label="已撤销" :value="4" />
                             </el-select>
                             <el-button type="primary" @click="load" :icon="Search">查询</el-button>
                             <el-button type="danger" @click="handleBatchDelete"
@@ -78,9 +79,13 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="createTime" label="报名时间" width="180" align="center" />
-                            <el-table-column label="操作" width="120" align="center" fixed="right">
+                            <el-table-column label="操作" width="180" align="center" fixed="right">
                                 <template #default="{ row }">
-                                    <el-button link type="danger" @click="handleDelete(row)">撤销</el-button>
+                                    <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
+                                        <el-button v-if="row.status === 0" link type="success" @click="handleAudit(row, 1)">同意</el-button>
+                                        <el-button v-if="row.status === 0" link type="warning" @click="handleAudit(row, 2)">拒绝</el-button>
+                                        <el-button v-if="row.status !== 4" link type="danger" @click="handleDelete(row)">撤销</el-button>
+                                    </div>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -211,8 +216,8 @@ const activeCompetitions = ref<any[]>([])
 const form = reactive({ competitionId: undefined, studentId: undefined, ledStudents: '' })
 
 // 辅助转换函数
-const statusText = (s: number) => ['待审核', '已参赛', '已拒绝', '已晋级'][s] ?? '未知'
-const statusType = (s: number) => (['warning', 'success', 'danger', 'primary'] as const)[s] ?? 'info'
+const statusText = (s: number) => ['待审核', '已参赛', '已拒绝', '已晋级', '已撤销'][s] ?? '未知'
+const statusType = (s: number) => (['warning', 'success', 'danger', 'primary', 'info'] as const)[s] ?? 'info'
 
 // 记录多选 ID
 const handleSelectionChange = (val: any[]) => { selectedIds.value = val.map(i => i.id) }
@@ -324,27 +329,45 @@ const save = async () => {
 }
 
 /**
- * 撤销单条报名记录
+ * 撤销单条报名记录（改为更新状态为4）
  */
 const handleDelete = (row: any) => {
     ElMessageBox.confirm('确定要撤销该报名吗？', '提示', { type: 'warning' }).then(async () => {
-        await request.delete('/registration/' + row.id)
+        await request.put('/registration', { ...row, status: 4 })
         ElMessage.success('已撤销')
         load()
-    })
+    }).catch(() => {})
 }
 
 /**
- * 批量处理：撤销多项报名
+ * 审核操作：同意或拒绝单条报名记录
+ */
+const handleAudit = (row: any, status: number) => {
+    const actionText = status === 1 ? '同意' : '拒绝'
+    ElMessageBox.confirm(`确定要${actionText}该报名吗？`, '审核提示', { type: 'warning' }).then(async () => {
+        const res = await request.put('/registration', { ...row, status }) as any
+        if (res.code === 200) {
+            ElMessage.success(`已${actionText}`)
+            load()
+        } else {
+            ElMessage.error(res.msg || '操作失败')
+        }
+    }).catch(() => {})
+}
+
+/**
+ * 批量处理：撤销多项报名（改为更新状态）
  */
 const handleBatchDelete = () => {
     ElMessageBox.confirm(`确定撤销选中的 ${selectedIds.value.length} 条报名吗？`, '批量操作').then(async () => {
-        for (const id of selectedIds.value) {
-            await request.delete('/registration/' + id)
+        // Find existing rows for the selected IDs to update them properly
+        const rowsToUpdate = tableData.value.filter((r: any) => selectedIds.value.includes(r.id));
+        for (const row of rowsToUpdate) {
+            await request.put('/registration', { ...(row as any), status: 4 })
         }
         ElMessage.success('批量处理完成')
         load()
-    })
+    }).catch(() => {})
 }
 
 // 标签切换联动加载
