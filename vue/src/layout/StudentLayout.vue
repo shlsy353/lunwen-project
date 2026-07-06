@@ -96,17 +96,23 @@ const menuItems = [
 <style scoped>
 .layout-container {
   min-height: 100vh;
-  background-color: #f5f7fa;
+  color: #111;
+  background:
+    radial-gradient(circle at 20% 8%, rgba(244, 225, 198, 0.54) 0%, rgba(244, 225, 198, 0.18) 24%, transparent 45%),
+    radial-gradient(circle at 80% 10%, rgba(215, 225, 236, 0.50) 0%, rgba(215, 225, 236, 0.16) 28%, transparent 50%),
+    linear-gradient(180deg, #fffdf8 0%, #fffaf1 48%, #fbfaf6 100%);
 }
 
 .main-header {
-  background: linear-gradient(135deg, #1a2a4a 0%, #0d1b36 100%);
+  border-bottom: 1px solid #ebe7df;
+  background: rgba(255, 255, 255, 0.64);
   padding: 0;
   height: 60px;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: none;
+  backdrop-filter: blur(10px);
 }
 
 .header-inner {
@@ -125,15 +131,20 @@ const menuItems = [
   align-items: center;
   gap: 10px;
   font-size: 16px;
-  font-weight: 700;
-  color: #fff;
+  font-weight: 800;
+  color: #111;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .logo-icon {
-  font-size: 22px;
-  color: #60a5fa;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ddd8cf;
+  border-radius: 10px;
+  color: #111;
+  background: #fffaf1;
+  font-size: 20px;
 }
 
 .top-menu {
@@ -144,24 +155,28 @@ const menuItems = [
 }
 
 .top-menu :deep(.el-menu-item) {
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: #69645d !important;
   font-size: 13px;
   padding: 0 10px;
-  height: 60px;
-  line-height: 60px;
+  height: 42px;
+  line-height: 42px;
+  margin: 9px 3px;
+  border-radius: 12px;
   border-bottom: none !important;
-  transition: color 0.2s;
+  font-weight: 600;
+  transition: background .16s ease, color .16s ease, box-shadow .16s ease;
 }
 
 .top-menu :deep(.el-menu-item:hover) {
-  color: #fff !important;
-  background: rgba(255, 255, 255, 0.1) !important;
+  color: #111 !important;
+  background: rgba(17, 17, 17, 0.045) !important;
 }
 
 .top-menu :deep(.el-menu-item.is-active) {
-  color: #60a5fa !important;
-  border-bottom: 2px solid #60a5fa !important;
-  background: transparent !important;
+  color: #fff !important;
+  border-bottom: none !important;
+  background: #111 !important;
+  box-shadow: 0 10px 24px rgba(17, 17, 17, 0.12);
 }
 
 .user-actions {
@@ -173,18 +188,21 @@ const menuItems = [
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.85);
-  padding: 4px 8px;
-  border-radius: 8px;
-  transition: background-color 0.2s;
+  color: #111;
+  padding: 7px 12px 7px 8px;
+  border: 1px solid #e7e2d9;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.68);
+  transition: background .16s ease, border-color .16s ease;
 }
 
 .user-info:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #d4d0c8;
+  background: #fff;
 }
 
 .user-avatar {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: #111;
   font-size: 14px;
   font-weight: 600;
 }
@@ -197,6 +215,9 @@ const menuItems = [
 .main-content {
   padding: 0;
   min-height: calc(100vh - 60px - 60px);
+  background:
+    linear-gradient(90deg, rgba(255, 253, 248, 0.82) 0%, rgba(255, 253, 248, 0.48) 36%, rgba(255, 253, 248, 0.82) 100%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.08) 0%, rgba(255, 253, 248, 0.82) 100%);
 }
 
 .content-wrapper {
@@ -206,11 +227,27 @@ const menuItems = [
 }
 
 .main-footer {
-  background: #1a2a4a;
-  color: #64748b;
+  border-top: 1px solid #ebe7df;
+  background: rgba(255, 255, 255, 0.66);
+  color: #69645d;
   text-align: center;
   height: 60px;
   line-height: 60px;
   font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .header-inner {
+    padding: 0 14px;
+  }
+
+  .logo span,
+  .username {
+    display: none;
+  }
+
+  .content-wrapper {
+    padding: 18px;
+  }
 }
 </style>

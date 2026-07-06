@@ -9,5 +9,7 @@ import java.util.Map;
 public interface IUserService extends IService<User> {
     Result<Map<String, Object>> login(User user);
 
+    Result<Map<String, Object>> loginWithGithub(String githubId, String login, String name, String avatar, String email);
+
     Result<User> getUserInfo(Long userId);
 }

@@ -1,5 +1,9 @@
 package com.project.controller;
 
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.project.entity.User;
@@ -7,9 +11,13 @@ import com.project.service.IUserService;
 import com.project.util.JwtUtil;
 import com.project.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -26,12 +34,111 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Value("${github.oauth.client-id:}")
+    private String githubClientId;
+
+    @Value("${github.oauth.client-secret:}")
+    private String githubClientSecret;
+
+    @Value("${github.oauth.redirect-uri:http://localhost:2301/api/user/oauth/github/callback}")
+    private String githubRedirectUri;
+
+    @Value("${github.oauth.frontend-success-url:http://localhost:2302/login}")
+    private String githubFrontendSuccessUrl;
+
     /**
      * 用户登录接口
      */
     @PostMapping("/login")
     public Result<Map<String, Object>> login(@RequestBody User user) {
         return userService.login(user);
+    }
+
+    @GetMapping("/oauth/github/login")
+    public void githubLogin(HttpServletResponse response) throws IOException {
+        if (!StringUtils.hasText(githubClientId) || !StringUtils.hasText(githubClientSecret)) {
+            redirectWithError(response, "GitHub 登录未配置 Client ID 或 Client Secret");
+            return;
+        }
+
+        String url = "https://github.com/login/oauth/authorize"
+                + "?client_id=" + URLUtil.encode(githubClientId, StandardCharsets.UTF_8)
+                + "&redirect_uri=" + URLUtil.encode(githubRedirectUri, StandardCharsets.UTF_8)
+                + "&scope=read:user%20user:email";
+        response.sendRedirect(url);
+    }
+
+    @GetMapping("/oauth/github/callback")
+    public void githubCallback(@RequestParam(required = false) String code,
+            @RequestParam(required = false) String error,
+            HttpServletResponse response) throws IOException {
+        if (StringUtils.hasText(error)) {
+            redirectWithError(response, "GitHub 授权失败");
+            return;
+        }
+        if (!StringUtils.hasText(code)) {
+            redirectWithError(response, "缺少 GitHub 授权码");
+            return;
+        }
+
+        try {
+            String tokenResponse = HttpRequest.post("https://github.com/login/oauth/access_token")
+                    .header("Accept", "application/json")
+                    .form("client_id", githubClientId)
+                    .form("client_secret", githubClientSecret)
+                    .form("code", code)
+                    .form("redirect_uri", githubRedirectUri)
+                    .timeout(10000)
+                    .execute()
+                    .body();
+            JSONObject tokenJson = JSONUtil.parseObj(tokenResponse);
+            String accessToken = tokenJson.getStr("access_token");
+
+            if (!StringUtils.hasText(accessToken)) {
+                redirectWithError(response, "获取 GitHub Token 失败");
+                return;
+            }
+
+            String userResponse = HttpRequest.get("https://api.github.com/user")
+                    .header("Accept", "application/vnd.github+json")
+                    .header("Authorization", "Bearer " + accessToken)
+                    .timeout(10000)
+                    .execute()
+                    .body();
+            JSONObject githubUser = JSONUtil.parseObj(userResponse);
+
+            Result<Map<String, Object>> loginResult = userService.loginWithGithub(
+                    githubUser.getStr("id"),
+                    githubUser.getStr("login"),
+                    githubUser.getStr("name"),
+                    githubUser.getStr("avatar_url"),
+                    githubUser.getStr("email"));
+
+            if (loginResult.getCode() != 200) {
+                redirectWithError(response, loginResult.getMessage());
+                return;
+            }
+
+            Map<String, Object> data = loginResult.getData();
+            String url = githubFrontendSuccessUrl
+                    + "?token=" + encode(data.get("token"))
+                    + "&role=" + encode(data.get("role"))
+                    + "&username=" + encode(data.get("username"))
+                    + "&name=" + encode(data.get("name"))
+                    + "&avatar=" + encode(data.get("avatar"))
+                    + "&id=" + encode(data.get("id"));
+            response.sendRedirect(url);
+        } catch (Exception e) {
+            redirectWithError(response, "GitHub 登录处理失败");
+        }
+    }
+
+    private void redirectWithError(HttpServletResponse response, String message) throws IOException {
+        response.sendRedirect(githubFrontendSuccessUrl + "?error=" + URLUtil.encode(message, StandardCharsets.UTF_8));
+    }
+
+    private String encode(Object value) {
+        return URLUtil.encode(value == null ? "" : String.valueOf(value), StandardCharsets.UTF_8);
     }
 
     /**

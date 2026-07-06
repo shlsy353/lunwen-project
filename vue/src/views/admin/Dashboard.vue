@@ -90,8 +90,8 @@ onMounted(loadStats)
       </el-col>
     </el-row>
 
-    <el-row :gutter="20" style="margin-top: 24px;">
-      <el-col :span="16">
+    <el-row :gutter="20" class="content-row">
+      <el-col :xs="24" :lg="16">
         <el-card shadow="never" class="list-card">
           <template #header>
             <div class="card-header">
@@ -105,7 +105,7 @@ onMounted(loadStats)
           </el-table>
         </el-card>
       </el-col>
-      <el-col :span="8">
+      <el-col :xs="24" :lg="8">
         <el-card shadow="never" class="todo-card">
           <template #header>
             <div class="card-header">
@@ -130,43 +130,240 @@ onMounted(loadStats)
 </template>
 
 <style scoped>
-.dashboard-container { padding: 0; }
-.page-header { margin-bottom: 24px; }
-.welcome-text h2 { margin: 0; font-size: 24px; color: #1e293b; }
-.welcome-text p { margin: 4px 0 0; color: #64748b; font-size: 14px; }
+.dashboard-container {
+    padding: 0;
+}
 
-.stats-row { margin-bottom: 24px; }
+.page-header {
+    margin-bottom: 26px;
+}
+
+.welcome-text h2 {
+    margin: 0;
+    color: #2f2a25;
+    font-size: 28px;
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+.welcome-text p {
+    margin: 8px 0 0;
+    color: #69645d;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.stats-row {
+    margin-bottom: 24px;
+}
+
 .stat-card {
-    padding: 24px;
-    border-radius: 16px;
-    color: #fff;
+    position: relative;
+    min-height: 150px;
+    overflow: hidden;
+    padding: 24px 26px;
+    border: 1px solid #ebe7df;
+    border-radius: 24px;
+    color: #3f3a34;
+    background: rgba(255, 255, 255, 0.68);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
+    box-shadow: 0 20px 70px rgba(17, 17, 17, 0.035);
+    backdrop-filter: blur(2px);
+    transition: transform .18s ease, border-color .18s ease, background .18s ease;
     cursor: default;
 }
-.stat-card:hover { transform: translateY(-5px); }
 
-.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-.green { background: linear-gradient(135deg, #10b981, #059669); }
-.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
-.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-
-.stat-label { font-size: 14px; opacity: 0.9; margin-bottom: 8px; font-weight: 500; }
-.stat-value { font-size: 32px; font-weight: 800; }
-.stat-icon { font-size: 48px; opacity: 0.2; }
-
-.list-card, .todo-card { border-radius: 16px; border: 1px solid #f1f5f9; }
-.card-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
-.card-header .el-icon { margin-right: 8px; vertical-align: middle; }
-
-.todo-list { padding: 10px 0; }
-.todo-item { 
-    display: flex; justify-content: space-between; align-items: center; 
-    padding: 12px; border-radius: 8px; cursor: pointer; transition: background 0.2s;
+.stat-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 18px;
+    bottom: 18px;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+    background: var(--accent);
 }
-.todo-item:hover { background-color: #f8fafc; }
-.todo-title { font-size: 15px; color: #334155; }
+
+.stat-card:hover {
+    border-color: #d8d2c8;
+    background: rgba(255, 255, 255, 0.86);
+    transform: translateY(-3px);
+}
+
+.blue {
+    --accent: #766a5d;
+}
+
+.green {
+    --accent: #6b8f78;
+}
+
+.orange {
+    --accent: #c28a43;
+}
+
+.purple {
+    --accent: #8b7aa8;
+}
+
+.stat-label {
+    color: #69645d;
+    font-size: 14px;
+    margin-bottom: 14px;
+    font-weight: 700;
+}
+
+.stat-value {
+    color: #2f2a25;
+    font-size: 40px;
+    line-height: 1;
+    font-weight: 800;
+}
+
+.stat-icon {
+    width: 58px;
+    height: 58px;
+    border: 1px solid #ebe7df;
+    border-radius: 18px;
+    color: var(--accent);
+    background: rgba(255, 250, 241, 0.78);
+    font-size: 28px;
+    opacity: 1;
+}
+
+.content-row {
+    margin-top: 24px;
+}
+
+.content-row :deep(.el-col) {
+    margin-bottom: 20px;
+}
+
+.list-card,
+.todo-card {
+    overflow: hidden;
+    border: 1px solid #ebe7df;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.68);
+    box-shadow: 0 20px 70px rgba(17, 17, 17, 0.035);
+    backdrop-filter: blur(2px);
+}
+
+.list-card :deep(.el-card__header),
+.todo-card :deep(.el-card__header) {
+    padding: 20px 24px;
+    border-bottom: 1px solid #ebe7df;
+    background: rgba(255, 250, 241, 0.52);
+}
+
+.list-card :deep(.el-card__body),
+.todo-card :deep(.el-card__body) {
+    padding: 22px 24px 24px;
+}
+
+.list-card :deep(.el-table) {
+    --el-table-border-color: #efebe4;
+    --el-table-header-bg-color: transparent;
+    --el-table-tr-bg-color: transparent;
+    --el-table-row-hover-bg-color: #fffaf1;
+    color: #45413c;
+    background: transparent;
+}
+
+.list-card :deep(.el-table th.el-table__cell) {
+    color: #777168;
+    background: transparent;
+    font-weight: 700;
+}
+
+.list-card :deep(.el-table tr) {
+    background: transparent;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #2f2a25;
+    font-weight: 800;
+}
+
+.card-header span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-header .el-icon {
+    color: #777168;
+}
+
+.card-header :deep(.el-button) {
+    color: #4f4942;
+    font-weight: 700;
+}
+
+.card-header :deep(.el-button:hover) {
+    color: #68635b;
+}
+
+.todo-list {
+    padding: 4px 0;
+}
+
+.todo-item { 
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    min-height: 64px;
+    padding: 14px 16px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background .16s ease, border-color .16s ease;
+}
+
+.todo-item:hover {
+    border-color: #ebe7df;
+    background: #fffaf1;
+}
+
+.todo-title {
+    color: #34312d;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.todo-card :deep(.el-divider--horizontal) {
+    margin: 8px 0;
+    border-top-color: #ebe7df;
+}
+
+.todo-card :deep(.el-badge__content) {
+    border: 0;
+    background: #766a5d;
+    font-weight: 800;
+}
+
+.todo-card :deep(.el-badge__content.is-fixed) {
+    top: 6px;
+}
+
+@media (max-width: 900px) {
+    .welcome-text h2 {
+        font-size: 24px;
+    }
+
+    .stat-card {
+        min-height: 132px;
+        padding: 22px;
+    }
+
+    .stat-value {
+        font-size: 34px;
+    }
+}
 </style>

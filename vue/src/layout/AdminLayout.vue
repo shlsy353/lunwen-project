@@ -42,7 +42,7 @@ const menuItems = [
 <template>
   <div class="layout-container">
     <el-container style="height: 100vh;">
-      <!-- Premium Dark Sidebar -->
+      <!-- Sidebar -->
       <el-aside :width="collapsed ? '64px' : '230px'" class="sidebar">
         <div class="logo">
           <el-icon class="logo-icon">
@@ -116,15 +116,24 @@ const menuItems = [
 .layout-container {
   height: 100vh;
   overflow: hidden;
-  background: #f8fafc;
+  color: #111;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  background:
+    radial-gradient(circle at 20% 8%, rgba(244, 225, 198, 0.54) 0%, rgba(244, 225, 198, 0.18) 24%, transparent 45%),
+    radial-gradient(circle at 80% 10%, rgba(215, 225, 236, 0.50) 0%, rgba(215, 225, 236, 0.16) 28%, transparent 50%),
+    linear-gradient(180deg, #fffdf8 0%, #fffaf1 48%, #fbfaf6 100%);
 }
 
 .sidebar {
-  background: #0f172a;
+  position: relative;
+  z-index: 2;
+  border-right: 1px solid #ebe7df;
+  background: rgba(255, 255, 255, 0.66);
+  backdrop-filter: blur(10px);
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
-  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 12px 0 38px rgba(17, 17, 17, 0.035);
 }
 
 .logo {
@@ -133,33 +142,39 @@ const menuItems = [
   align-items: center;
   gap: 12px;
   padding: 0 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid #ebe7df;
   overflow: hidden;
   flex-shrink: 0;
 }
 
 .logo-icon {
-  font-size: 26px;
-  color: #3b82f6;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ddd8cf;
+  border-radius: 10px;
+  color: #111;
+  background: #fffaf1;
+  font-size: 20px;
 }
 
 .logo-text {
-  color: #fff;
+  color: #111;
   font-weight: 800;
   font-size: 16px;
-  letter-spacing: 1px;
+  letter-spacing: 0;
   white-space: nowrap;
 }
 
 .role-tag {
   font-size: 10px;
-  color: #3b82f6;
+  color: #8b8277;
   font-weight: 900;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   text-align: center;
-  padding: 8px 0;
-  background: rgba(59, 130, 246, 0.1);
-  margin-bottom: 10px;
+  padding: 10px 0;
+  background: rgba(255, 250, 241, 0.72);
+  border-bottom: 1px solid #f0ece4;
+  margin-bottom: 8px;
 }
 
 .sidebar-menu {
@@ -171,23 +186,24 @@ const menuItems = [
 }
 
 .sidebar-menu :deep(.el-menu-item) {
-  color: #94a3b8;
-  height: 50px;
-  line-height: 50px;
-  margin: 4px 0;
+  color: #69645d;
+  height: 46px;
+  line-height: 46px;
+  margin: 5px 0;
   border-radius: 12px;
-  transition: all 0.2s;
+  font-weight: 600;
+  transition: background .16s ease, color .16s ease, box-shadow .16s ease;
 }
 
 .sidebar-menu :deep(.el-menu-item:hover) {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: rgba(17, 17, 17, 0.045);
+  color: #111;
 }
 
 .sidebar-menu :deep(.el-menu-item.is-active) {
-  background: #3b82f6 !important;
+  background: #111 !important;
   color: #fff !important;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 10px 24px rgba(17, 17, 17, 0.12);
 }
 
 .sidebar-menu :deep(.el-menu-item.is-active .el-icon) {
@@ -196,23 +212,42 @@ const menuItems = [
 
 .collapse-btn {
   height: 48px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid #ebe7df;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #94a3b8;
-  transition: all 0.2s;
+  color: #777168;
+  transition: background .16s ease, color .16s ease;
 }
 
 .collapse-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: rgba(17, 17, 17, 0.045);
+  color: #111;
+}
+
+.main-body {
+  position: relative;
+}
+
+.main-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(88, 83, 76, 0.10) 0.65px, transparent 0.65px),
+    radial-gradient(rgba(88, 83, 76, 0.15) 1px, transparent 1px);
+  background-position: 0 0, 11px 11px;
+  background-size: 4px 4px, 22px 22px;
+  pointer-events: none;
 }
 
 .main-header {
-  background: #fff;
-  border-bottom: 1px solid #e2e8f0;
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.62);
+  border-bottom: 1px solid #ebe7df;
+  backdrop-filter: blur(10px);
   height: 64px;
   display: flex;
   align-items: center;
@@ -220,22 +255,34 @@ const menuItems = [
   padding: 0 24px;
 }
 
+.main-header :deep(.el-breadcrumb__inner) {
+  color: #78736c;
+  font-weight: 600;
+}
+
+.main-header :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
+  color: #111;
+}
+
 .user-info {
   display: flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 10px;
-  transition: background 0.2s;
+  padding: 7px 12px 7px 8px;
+  border: 1px solid #e7e2d9;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.68);
+  transition: background .16s ease, border-color .16s ease;
 }
 
 .user-info:hover {
-  background: #f1f5f9;
+  border-color: #d4d0c8;
+  background: #fff;
 }
 
 .admin-avatar {
-  background: #3b82f6;
+  background: #111;
   font-weight: 800;
   font-size: 12px;
 }
@@ -243,7 +290,7 @@ const menuItems = [
 .username {
   font-size: 14px;
   font-weight: 600;
-  color: #1e293b;
+  color: #111;
 }
 
 .logout-item {
@@ -252,8 +299,26 @@ const menuItems = [
 }
 
 .main-content {
-  padding: 30px;
+  position: relative;
+  z-index: 1;
+  padding: 32px 36px;
   overflow-y: auto;
-  background: #f8fafc;
+  background:
+    linear-gradient(90deg, rgba(255, 253, 248, 0.82) 0%, rgba(255, 253, 248, 0.48) 36%, rgba(255, 253, 248, 0.82) 100%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.08) 0%, rgba(255, 253, 248, 0.82) 100%);
+}
+
+@media (max-width: 900px) {
+  .main-content {
+    padding: 24px 18px;
+  }
+
+  .main-header {
+    padding: 0 16px;
+  }
+
+  .username {
+    display: none;
+  }
 }
 </style>

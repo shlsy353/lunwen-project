@@ -108,7 +108,7 @@ const handleReview = (row: any, status: number) => {
 }
 
 const confirmReview = async () => {
-    await request.put('/expense', { id: reviewData.id, status: reviewData.status })
+    await request.put('/expense/' + reviewData.id + '/status', null, { params: { status: reviewData.status } })
     ElMessage.success('审核决策已生效')
     dialogVisible.value = false
     load()

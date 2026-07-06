@@ -88,17 +88,44 @@ const handleLogout = () => {
 </template>
 
 <style scoped>
-.layout-container { min-height: 100vh; background-color: #f5f7fa; }
-.main-header { background-color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 0; height: 64px; position: sticky; top: 0; z-index: 1000; }
+.layout-container {
+  min-height: 100vh;
+  color: #111;
+  background:
+    radial-gradient(circle at 20% 8%, rgba(244, 225, 198, 0.54) 0%, rgba(244, 225, 198, 0.18) 24%, transparent 45%),
+    radial-gradient(circle at 80% 10%, rgba(215, 225, 236, 0.50) 0%, rgba(215, 225, 236, 0.16) 28%, transparent 50%),
+    linear-gradient(180deg, #fffdf8 0%, #fffaf1 48%, #fbfaf6 100%);
+}
+.main-header {
+  border-bottom: 1px solid #ebe7df;
+  background: rgba(255, 255, 255, 0.64);
+  box-shadow: none;
+  backdrop-filter: blur(10px);
+  padding: 0;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
 .header-inner { max-width: 1200px; margin: 0 auto; height: 100%; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; }
-.logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600; color: #409EFF; min-width: 240px; cursor: pointer; }
-.logo-icon { font-size: 24px; }
+.logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; color: #111; min-width: 240px; cursor: pointer; }
+.logo-icon { width: 34px; height: 34px; border: 1px solid #ddd8cf; border-radius: 10px; color: #111; background: #fffaf1; font-size: 20px; }
 .top-menu { border-bottom: none !important; flex: 1; justify-content: center; }
+.top-menu :deep(.el-menu-item) { height: 42px; line-height: 42px; margin: 11px 3px; border-radius: 12px; color: #69645d !important; font-weight: 600; border-bottom: none !important; }
+.top-menu :deep(.el-menu-item:hover) { color: #111 !important; background: rgba(17, 17, 17, 0.045) !important; }
+.top-menu :deep(.el-menu-item.is-active) { color: #fff !important; background: #111 !important; box-shadow: 0 10px 24px rgba(17, 17, 17, 0.12); }
 .user-actions { min-width: 150px; display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
-.user-info { display: flex; align-items: center; gap: 8px; cursor: pointer; color: #606266; padding: 4px 8px; border-radius: 4px; transition: background-color 0.2s; }
-.user-info:hover { background-color: #f0f2f5; }
-.username { font-size: 14px; font-weight: 500; }
-.main-content { padding: 0; }
+.user-info { display: flex; align-items: center; gap: 8px; cursor: pointer; color: #111; padding: 7px 12px 7px 8px; border: 1px solid #e7e2d9; border-radius: 999px; background: rgba(255, 255, 255, 0.68); transition: background .16s ease, border-color .16s ease; }
+.user-info:hover { border-color: #d4d0c8; background: #fff; }
+.username { font-size: 14px; font-weight: 600; color: #111; }
+.main-content { padding: 0; background: linear-gradient(90deg, rgba(255, 253, 248, 0.82) 0%, rgba(255, 253, 248, 0.48) 36%, rgba(255, 253, 248, 0.82) 100%), linear-gradient(180deg, rgba(255, 253, 248, 0.08) 0%, rgba(255, 253, 248, 0.82) 100%); }
 .content-wrapper { min-height: calc(100vh - 64px - 60px); }
-.main-footer { background-color: #2b3a4a; color: #909399; text-align: center; padding: 20px; margin-top: auto; }
+.main-footer { border-top: 1px solid #ebe7df; background: rgba(255, 255, 255, 0.66); color: #69645d; text-align: center; padding: 20px; margin-top: auto; }
+
+@media (max-width: 900px) {
+  .header-inner { padding: 0 14px; }
+  .logo { min-width: auto; }
+  .logo span,
+  .username { display: none; }
+}
 </style>

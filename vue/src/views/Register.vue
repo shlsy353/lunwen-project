@@ -85,23 +85,82 @@ const handleRegister = async () => {
 
 <style scoped>
 .register-container {
+    position: relative;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    overflow: hidden;
+    padding: 96px 20px 40px;
+    background:
+        radial-gradient(circle at 22% 12%, rgba(244, 225, 198, 0.62) 0%, rgba(244, 225, 198, 0.22) 25%, transparent 44%),
+        radial-gradient(circle at 78% 18%, rgba(215, 225, 236, 0.54) 0%, rgba(215, 225, 236, 0.18) 28%, transparent 48%),
+        radial-gradient(circle at 50% 92%, rgba(237, 228, 213, 0.72) 0%, rgba(237, 228, 213, 0.20) 34%, transparent 62%),
+        linear-gradient(180deg, #fffdf8 0%, #fffaf1 46%, #fbfaf6 100%);
+}
+
+.register-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(rgba(88, 83, 76, 0.13) 0.65px, transparent 0.65px),
+        radial-gradient(rgba(88, 83, 76, 0.20) 1.25px, transparent 1.25px);
+    background-position: 0 0, 11px 11px;
+    background-size: 4px 4px, 22px 22px;
+    opacity: 0.72;
+    pointer-events: none;
 }
 
 .register-box {
-    width: 500px;
-    padding: 40px;
-    background: white;
-    border-radius: 12px;
+    position: relative;
+    z-index: 1;
+    width: min(100%, 520px);
+    padding: 38px 40px 40px;
+    border: 1px solid #ebe7df;
+    border-radius: 36px;
+    background: rgba(255, 255, 255, 0.68);
+    box-shadow: 0 20px 70px rgba(17, 17, 17, 0.035);
+    backdrop-filter: blur(2px);
 }
 
 h2 {
     text-align: center;
     margin-bottom: 30px;
-    color: #333;
+    color: #111;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+.register-box :deep(.el-form-item__label) {
+    color: #69645d;
+    font-weight: 700;
+}
+
+.register-box :deep(.el-input__wrapper) {
+    min-height: 44px;
+}
+
+.register-box :deep(.el-button) {
+    height: 48px;
+}
+
+.register-box a {
+    color: #111;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+    .register-container {
+        padding: 48px 16px 28px;
+    }
+
+    .register-box {
+        padding: 28px 18px 30px;
+        border-radius: 30px;
+    }
 }
 </style>
