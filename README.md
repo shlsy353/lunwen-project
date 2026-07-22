@@ -1,6 +1,6 @@
-# 高校学科竞赛管理系统
+# 校园赛事管理一体化平台
 
-基于 Spring Boot 3 + Vue 3 + TypeScript 的现代化高校学科竞赛管理系统。
+基于 Spring Boot 3 + Vue 3 + TypeScript 的现代化校园赛事管理一体化平台。
 
 ## 技术栈
 
