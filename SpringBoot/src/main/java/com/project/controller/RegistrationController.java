@@ -2,10 +2,12 @@ package com.project.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.project.config.*;
 import com.project.entity.Registration;
 import com.project.service.IRegistrationService;
 import com.project.util.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,9 @@ public class RegistrationController {
 
     @Autowired
     private com.project.service.IStudentLeaderService studentLeaderService;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     /**
      * 分页查询报名记录列表
@@ -100,7 +105,17 @@ public class RegistrationController {
         }
 
         try {
-            return registrationService.save(registration) ? Result.success("报名成功") : Result.error("报名失败");
+            boolean saved = registrationService.save(registration);
+            if (saved) {
+                String message = "studentId=" + registration.getStudentId()
+                        + ",competitionId=" + registration.getCompetitionId()
+                        + ",leaderId=" + registration.getLeaderId();
+
+                rabbitTemplate.convertAndSend(RabbitMQConfig.REGISTRATION_QUEUE, message);
+
+                return Result.success("报名成功");
+            }
+            return Result.error("报名失败");
         } catch (Exception e) {
             log.error("报名保存异常", e);
             return Result.error("服务器异常，请稍后重试");
