@@ -1,3 +1,22 @@
+
+## Docker 一键运行
+
+本项目已提供 Docker Compose 配置，可一键启动前端、后端、MySQL 和 RabbitMQ。
+
+### 环境要求
+
+请先安装并启动 Docker Desktop。
+
+### 启动项目
+
+在项目根目录执行：
+
+```bash
+docker compose up -d --build
+
+
+
+
 # 校园赛事管理一体化平台
 
 基于 Spring Boot 3 + Vue 3 + TypeScript 的现代化校园赛事管理一体化平台。
